@@ -9,6 +9,7 @@ use App\Filament\Resources\OrgCharts\Schemas\OrgChartForm;
 use App\Filament\Resources\OrgCharts\Tables\OrgChartsTable;
 use App\Models\OrgChart;
 use BackedEnum;
+use Filament\Forms\Components\FileUpload;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -24,12 +25,26 @@ class OrgChartResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return OrgChartForm::configure($schema);
+        return $schema
+            ->schema([
+                FileUpload::make('image')
+                    ->label('Organizational Chart')
+                    ->image()
+                    ->required()
+                    ->directory('org-charts')
+                    ->disk('public')
+                    ->imageEditor()
+                    ->maxSize(4096)
+                    ->columnSpanFull(),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
-        return OrgChartsTable::configure($table);
+        return $table
+            ->table([
+                
+            ])
     }
 
     public static function getRelations(): array

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->date('event-date');
+            $table->date('event_date');
             $table->enum('type', ['holiday', 'reminder']);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
