@@ -9,9 +9,17 @@ use App\Filament\Resources\LinkCategories\Schemas\LinkCategoryForm;
 use App\Filament\Resources\LinkCategories\Tables\LinkCategoriesTable;
 use App\Models\LinkCategory;
 use BackedEnum;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class LinkCategoryResource extends Resource
@@ -24,12 +32,56 @@ class LinkCategoryResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return LinkCategoryForm::configure($schema);
+        return $schema
+            ->schema([
+                Section::make('Category Information')
+                    ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Toggle::make('is_active')
+                            ->label('Active')
+                            ->default(true),
+                    ]),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
-        return LinkCategoriesTable::configure($table);
+        return $table
+            ->columns([
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+                TextColumn::make('links_count')
+                    ->counts('links')
+                    ->label('Total Links')
+                    ->badge()
+                    ->color('primary'),
+                IconColumn::make('is_active')
+                    ->boolean()
+                    ->label('Active'),
+                TextColumn::make('created_at')
+                    ->dateTime('M d, Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                SelectFilter::make('is_active')
+                    ->options([
+                        1 => 'Active',
+                        0 => 'Inactive',
+                    ]),
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->recordActions([
+                EditAction::make(),
+            ])
+            ->toolbarActions([
+                DeleteBulkAction::make(),
+            ]);
     }
 
     public static function getRelations(): array

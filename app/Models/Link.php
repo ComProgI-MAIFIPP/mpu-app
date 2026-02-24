@@ -18,6 +18,6 @@ class Link extends Model
     ];
 
     public function category(){
-        return $this->belongsTo(LinkCategory::class);
+        return $this->belongsTo(LinkCategory::class, 'link_category_id');
     }
 }
