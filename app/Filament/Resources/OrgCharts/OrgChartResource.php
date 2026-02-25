@@ -33,7 +33,7 @@ class OrgChartResource extends Resource
                     ->label('Organizational Chart')
                     ->image()
                     ->required()
-                    ->directory('org-charts')
+                    ->directory('orgcharts')
                     ->disk('public')
                     ->imageEditor()
                     ->maxSize(4096)
@@ -46,9 +46,12 @@ class OrgChartResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('image')
-                    ->label('Preview')
-                    ->imageSize(100),
-                
+                    ->label('Organizational Chart')
+                    ->disk('public') 
+                    //->directory('org-charts')
+                    ->square() 
+                    ->imageHeight(400), 
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
