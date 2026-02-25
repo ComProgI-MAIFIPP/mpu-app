@@ -127,6 +127,7 @@ class ReminderResource extends Resource
                         0 => 'Inactive',
                     ]),
             ])
+            ->defaultGroup('type')
             ->defaultSort('event_date', 'desc')
             ->recordActions([
                 EditAction::make(),
